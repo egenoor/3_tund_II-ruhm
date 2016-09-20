@@ -1,7 +1,8 @@
 <?php
 	
-	echo hash("sha512", "Ege");
+	require("../../config.php");
 	
+	 echo "<body style='background-color:pink'>";
 	//<?php echo $m;? >
 	//<?=$m;? >
 
@@ -93,6 +94,62 @@
 		
 	}
 	
+	
+	
+	//peab olema email ja parool
+	//ja ühtegi errorit
+	
+	if ( isset($_POST["signupEmail"]) &&
+		isset($_POST["signupPassword"]) &&
+		$signupEmailError == "" &&
+	     empty ($signupPasswordError) 
+		 
+		 ) {
+		 
+		 //salvestame ab'i
+		 echo "Salvestan...<br>";
+		 
+		 echo "email: ".$signupEmail."<br>";
+		 echo "password: ".$_POST["signupPassword"]."<br>";
+		 
+		 $password = hash("sha512", $_POST["signupPassword"]);
+		 
+		 echo "password hashed: ".$password."<br>";
+		 
+		 
+		 //echo $serverUsername;
+		
+		// ÜHENDUS
+		$database = "if16_ege";
+		$mysqli = new mysqli($serverHost, $serverUsername, $serverPassword, $database);
+	
+		//sqli rida
+		$stmt = $mysqli->prepare("INSERT INTO user_sample (email, password) VALUES (?, ?)");
+		
+		echo $mysql->error;
+		
+		//stringina üks täht iga muutuja kohta, mis tüüp
+		//string - s
+		//interger - i
+		//float - (double) - d  
+		//küsimärgid asendada
+		$stmt->bind_param("ss", $signupEmail, $password);
+		
+		//täida käsku
+		if($stmt ->execute() ) {
+			
+			echo "salvestamine õnnestus";
+			
+		} else {
+			echo "ERROR ". $stmt->error;
+		}
+		
+		//panen ühenduse kinni
+	$stmt->close();
+	$mysqli->close();
+		
+		
+	}
 	
 	
 ?>
